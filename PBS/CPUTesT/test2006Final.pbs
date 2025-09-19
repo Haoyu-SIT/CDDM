@@ -1,0 +1,37 @@
+#!/bin/bash
+#PBS -P iu60
+#PBS -q normal
+#PBS -l walltime=48:00:00
+#PBS -l ncpus=12
+#PBS -l ngpus=0
+#PBS -l mem=32GB
+#PBS -l jobfs=0GB
+#PBS -l wd
+#PBS -l storage=gdata/ux62+gdata/zv2
+#PBS -o /home/599/hs2870/LOG/Test
+#PBS -e /home/599/hs2870/LOG/Test
+
+# === 环境配置 ===
+module load python3/3.10.0
+module load intel-mkl/2021.4.0
+
+# 正确 export PYTHONPATH，确保 python 能找到你的自定义包
+export PYTHONPATH=/scratch/iu60/hs2870/PYTHON_LIBS:$PYTHONPATH
+export LD_LIBRARY_PATH=/scratch/iu60/hs2870/PYTHON_LIBS:$LD_LIBRARY_PATH
+
+# 检查一下 PYTHONPATH 是否生效
+echo "PYTHONPATH at runtime: $PYTHONPATH"
+echo "LD_LIBRARY_PATH at runtime: $LD_LIBRARY_PATH"
+
+# === 运行你的脚本 ===
+python3 /home/599/hs2870/PEFGAN-for-rainfall-main/PEFGAN/FinalMetric2006-DESR.py
+# python3 /home/599/hs2870/PEFGAN-for-rainfall-main/PEFGAN/FinalMetric2007-DESR.py
+# python3 /home/599/hs2870/PEFGAN-for-rainfall-main/PEFGAN/FinalMetric2018-DESR.py
+
+# === 打印一些环境信息，方便 debug ===
+echo "Python version:" $(python3 --version)
+echo "Python location:" $(which python3)
+echo "Current working directory:" $(pwd)
+echo "Python packages:" $(pip3 freeze)
+echo "Package location (example netCDF4):" $(pip3 show netCDF4 || echo "netCDF4 not installed")
+cat $PBS_NODEFILE

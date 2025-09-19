@@ -1,0 +1,37 @@
+#!/bin/bash
+#PBS -P iu60
+#PBS -q normal
+#PBS -l walltime=48:00:00
+#PBS -l ncpus=12
+#PBS -l ngpus=0
+#PBS -l mem=32GB
+#PBS -l jobfs=0GB
+#PBS -l wd
+#PBS -l storage=gdata/ux62+gdata/zv2
+#PBS -v PYTHONPATH=/scratch/iu60/hs2870/PYTHON_LIBS/
+#PBS -o /home/599/hs2870/LOG/Test
+#PBS -e /home/599/hs2870/LOG/Test
+
+
+echo "$PYTHONPATH"
+
+module load python3/3.10.0
+python3 /home/599/hs2870/Visuallization/colordiff/diff.py
+
+
+# Print python version
+echo "Python version:" $(python3 --version)
+
+# Print python location
+echo "Python location:" $(which python3)
+
+# Print the current working directory
+echo "Current working directory:" $(pwd)
+
+# Print python packages in the current environment
+echo "Python packages:" $(pip3 freeze)
+
+# Print package location
+echo "Package location:" $(pip3 show netCDF4)
+
+cat $PBS_NODEFILE

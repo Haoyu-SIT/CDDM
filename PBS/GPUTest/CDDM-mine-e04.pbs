@@ -1,0 +1,37 @@
+#!/bin/bash
+#PBS -P iu60
+#PBS -q gpuvolta
+#PBS -l walltime=48:00:00
+#PBS -l ncpus=12
+#PBS -l ngpus=1
+#PBS -l mem=64GB
+#PBS -l jobfs=1GB
+#PBS -l wd
+#PBS -l storage=gdata/ux62+gdata/zv2
+#PBS -v PYTHONPATH=/scratch/iu60/hs2870/PYTHON_LIBS/
+#PBS -o /home/599/hs2870/LOG/BBDM
+#PBS -e /home/599/hs2870/LOG/BBDM
+
+
+echo "$PYTHONPATH"
+
+module load python3/3.10.0
+python3 /home/599/hs2870/CDDM-Test/NC-BBDM-v2-mine-e04/test.py --config /home/599/hs2870/NC-BBDM-v2-mine/configs/Test-CDDM2018.yaml \
+--train --sample_at_start --save_top --gpu_ids 0 --result_path /scratch/iu60/hs2870/results/2025-CDDM-results-2018
+
+# Print python version
+echo "Python version:" $(python3 --version)
+
+# Print python location
+echo "Python location:" $(which python3)
+
+# Print the current working directory
+echo "Current working directory:" $(pwd)
+
+# Print python packages in the current environment
+echo "Python packages:" $(pip3 freeze)
+
+# Print package location
+echo "Package location:" $(pip3 show netCDF4)
+
+cat $PBS_NODEFILE

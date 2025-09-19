@@ -1,0 +1,41 @@
+#!/bin/bash
+#PBS -P iu60
+#PBS -q gpuvolta
+#PBS -l walltime=48:00:00
+#PBS -l ncpus=48
+#PBS -l ngpus=4
+#PBS -l mem=256GB
+#PBS -l jobfs=0GB
+#PBS -l wd
+#PBS -l storage=gdata/ux62+gdata/zv2
+#PBS -v PYTHONPATH=/scratch/iu60/hs2870/PYTHON_LIBS/
+#PBS -o /home/599/hs2870/LOG/CDDM
+#PBS -e /home/599/hs2870/LOG/CDDM
+
+
+
+echo "$PYTHONPATH"
+
+module load python3/3.10.0
+CUDA_VISIBLE_DEVICES=0,1,2,3  python /home/599/hs2870/DG_CN-Celeb-main/main_baseline_wav.py --dataset 'IEMOCAP' --extractor 'fbank' --model_type 'ba_transformer' \
+--wavaug_flag 1 --accu 0 --LR 1e-3 --batchsize 16 --optimizer 'Adam' --nMelBins 1024  --workers 8 \
+--embedding_dim 1024 --loss 'AAM' --perturbation 1 --scheduler 'cosine' --epochs 50 --m 0.2 --s 32 --egs_num 'train' \
+--logpath './results_wav/cnceleb/fb80_bat' --load_path '/home/songhy/Projects/DG_CN-Celeb-main/results_wav/ptm/cnceleb/fb80_bat/2025-01-24_13-41-57/checkpoint_teacher_epoch50'
+
+
+# Print python version
+echo "Python version:" $(python3 --version)
+
+# Print python location
+echo "Python location:" $(which python3)
+
+# Print the current working directory
+echo "Current working directory:" $(pwd)
+
+# Print python packages in the current environment
+echo "Python packages:" $(pip3 freeze)
+
+# Print package location
+echo "Package location:" $(pip3 show netCDF4)
+
+cat $PBS_NODEFILE
